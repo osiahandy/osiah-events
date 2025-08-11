@@ -40,7 +40,7 @@ function mergeTickets(a = [], b = []) {
 const statusRank = { cancelled: 3, sold_out: 2, on_sale: 1, tba: 0 };
 const mergeStatus = (a = "tba", b = "tba") =>
   Object.entries(statusRank).find(
-    ([k, v]) => v === Math.max(statusRank[a] ?? 0, statusRank[b] ?? 0)
+    ([, v]) => v === Math.max(statusRank[a] ?? 0, statusRank[b] ?? 0)
   )[0];
 
 const sourceLabel = (s) =>
@@ -81,28 +81,37 @@ async function fetchEventbrite() {
   const token = process.env.EVENTBRITE_TOKEN;
   if (!token) return [];
   const org = process.env.EVENTBRITE_ORG_ID;
-  // expand=venue so we don’t need a second request
   const base = org
     ? `https://www.eventbriteapi.com/v3/organizations/${org}/events/?status=live,started,ended,canceled&expand=venue`
     : `https://www.eventbriteapi.com/v3/users/me/events/?status=live,started,ended,canceled&expand=venue`;
-  const res = await fetch(base, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
-  if (!res.ok) return [];
-  const data = await res.json();
-  const events = (data.events || []).map((ev) =>
-    makeEvent({
-      date: ev.start?.utc || ev.start?.local,
-      time: ev.start?.local?.slice(11, 16) || null,
-      city: ev.venue?.address?.city || "",
-      venue: ev.venue?.name || "",
-      title: ev.name?.text || null,
-      source: "eventbrite",
-      url: ev.url,
-      status: ev.status === "canceled" ? "cancelled" : "on_sale",
-    })
-  );
-  return events;
+
+  let page = 1,
+    out = [];
+  while (true) {
+    const url = `${base}&page=${page}`;
+    const res = await fetch(url, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    if (!res.ok) break;
+    const data = await res.json();
+    const chunk = (data.events || []).map((ev) =>
+      makeEvent({
+        date: ev.start?.utc || ev.start?.local,
+        time: ev.start?.local?.slice(11, 16) || null,
+        city: ev.venue?.address?.city || "",
+        venue: ev.venue?.name || "",
+        title: ev.name?.text || null,
+        source: "eventbrite",
+        url: ev.url,
+        status: ev.status === "canceled" ? "cancelled" : "on_sale",
+      })
+    );
+    out.push(...chunk);
+    if (!data.pagination || !data.pagination.has_more_items) break;
+    page++;
+  }
+  console.log(`[eventbrite] fetched ${out.length}`);
+  return out;
 }
 
 async function fetchBandsintown() {
@@ -113,10 +122,16 @@ async function fetchBandsintown() {
     artist
   )}/events?app_id=${encodeURIComponent(appId)}&date=all`;
   const res = await fetch(url);
-  if (!res.ok) return [];
+  if (!res.ok) {
+    console.log(`[bandsintown] HTTP ${res.status}`);
+    return [];
+  }
   const arr = await res.json();
-  if (!Array.isArray(arr)) return [];
-  return arr.map((e) =>
+  if (!Array.isArray(arr)) {
+    console.log("[bandsintown] non-array response");
+    return [];
+  }
+  const out = arr.map((e) =>
     makeEvent({
       date: e.datetime,
       time: e.datetime?.slice(11, 16) || null,
@@ -132,27 +147,24 @@ async function fetchBandsintown() {
         : "on_sale",
     })
   );
-}
-
-async function fetchSkiddle() {
-  const key = process.env.SKIDDLE_API_KEY;
-  if (!key) return [];
-  // Placeholder: we’ll plug the right artist/endpoint once we decide the best filter.
-  return [];
+  console.log(`[bandsintown] fetched ${out.length} for artist="${artist}"`);
+  return out;
 }
 
 async function fetchTicketmaster() {
   const key = process.env.TICKETMASTER_API_KEY;
   if (!key) return [];
-  // Basic keyword search; we can refine with classificationName, countryCode, etc.
   const url = `https://app.ticketmaster.com/discovery/v2/events.json?apikey=${key}&keyword=${encodeURIComponent(
     "Osiah"
-  )}`;
+  )}&size=100`;
   const res = await fetch(url);
-  if (!res.ok) return [];
+  if (!res.ok) {
+    console.log(`[ticketmaster] HTTP ${res.status}`);
+    return [];
+  }
   const data = await res.json();
   const list = data?._embedded?.events || [];
-  return list.map((ev) => {
+  const out = list.map((ev) => {
     const v = ev._embedded?.venues?.[0] || {};
     const city = `${v.city?.name || ""}${
       v.country?.countryCode ? ", " + v.country.countryCode : ""
@@ -168,6 +180,17 @@ async function fetchTicketmaster() {
       status: ev.dates?.status?.code === "cancelled" ? "cancelled" : "on_sale",
     });
   });
+  console.log(`[ticketmaster] fetched ${out.length}`);
+  return out;
+}
+
+async function fetchSkiddle() {
+  const key = process.env.SKIDDLE_API_KEY;
+  if (!key) return [];
+  console.log(
+    "[skiddle] fetcher not implemented yet (placeholder returning 0)"
+  );
+  return [];
 }
 
 // --------- merge/dedupe/split
@@ -208,13 +231,15 @@ function splitUpcomingPast(events) {
 
 // --------- main
 (async function main() {
-  const all = [
-    ...(await fetchEventbrite()),
-    ...(await fetchBandsintown()),
-    ...(await fetchSkiddle()),
-    ...(await fetchTicketmaster()),
-  ];
-  const merged = mergeEvents(all);
+  const eb = await fetchEventbrite();
+  const bit = await fetchBandsintown();
+  const sk = await fetchSkiddle();
+  const tm = await fetchTicketmaster();
+  console.log(
+    `counts -> eventbrite:${eb.length} bandsintown:${bit.length} skiddle:${sk.length} ticketmaster:${tm.length}`
+  );
+
+  const merged = mergeEvents([...eb, ...bit, ...sk, ...tm]);
   const { upcoming, past } = splitUpcomingPast(merged);
 
   // Write to /web (your Firebase public dir)
