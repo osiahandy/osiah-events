@@ -116,6 +116,50 @@ async function fetchEventbrite() {
 
 // --------- Bandsintown (public Artist API)
 async function fetchBandsintown() {
+  const partnerKey = process.env.BANDSINTOWN_PARTNER_KEY;
+  const artistId = process.env.BANDSINTOWN_ARTIST_ID; // e.g., 3093010
+
+  // Prefer Partner API (more reliable, matches your widget)
+  if (partnerKey && artistId) {
+    const url = `https://partners.bandsintown.com/api/v1/artists/${artistId}/events`;
+    const res = await fetch(url, {
+      headers: { Authorization: `Bearer ${partnerKey}` },
+    });
+    if (!res.ok) {
+      console.log(`[bandsintown-partner] HTTP ${res.status}`);
+      return [];
+    }
+    const arr = await res.json();
+    if (!Array.isArray(arr)) {
+      console.log(
+        "[bandsintown-partner] non-array:",
+        JSON.stringify(arr).slice(0, 400)
+      );
+      return [];
+    }
+    const out = arr.map((e) =>
+      makeEvent({
+        date: e.datetime || e.start_time,
+        time: (e.datetime || e.start_time)?.slice(11, 16) || null,
+        city: `${e.venue?.city || ""}${
+          e.venue?.country ? ", " + e.venue.country : ""
+        }`,
+        venue: e.venue?.name || "",
+        title: e.title || e.description || null,
+        source: "bandsintown",
+        url: e.offers?.[0]?.url || e.url || null,
+        status: e.offers?.some((o) => /sold\s*out/i.test(o.status || ""))
+          ? "sold_out"
+          : "on_sale",
+      })
+    );
+    console.log(
+      `[bandsintown-partner] fetched ${out.length} for artist ID ${artistId}`
+    );
+    return out;
+  }
+
+  // Fallback to public Artist API if partner key/ID not present
   const appId = process.env.BANDSINTOWN_APP_ID;
   const artist = process.env.BANDSINTOWN_ARTIST;
   if (!appId || !artist) return [];
@@ -124,12 +168,12 @@ async function fetchBandsintown() {
   )}/events?app_id=${encodeURIComponent(appId)}&date=all`;
   const res = await fetch(url);
   if (!res.ok) {
-    console.log(`[bandsintown] HTTP ${res.status}`);
+    console.log(`[bandsintown-public] HTTP ${res.status}`);
     return [];
   }
   const arr = await res.json();
   if (!Array.isArray(arr)) {
-    console.log("[bandsintown] non-array response");
+    console.log("[bandsintown-public] non-array");
     return [];
   }
   const out = arr.map((e) =>
@@ -148,7 +192,9 @@ async function fetchBandsintown() {
         : "on_sale",
     })
   );
-  console.log(`[bandsintown] fetched ${out.length} for artist="${artist}"`);
+  console.log(
+    `[bandsintown-public] fetched ${out.length} for artist="${artist}"`
+  );
   return out;
 }
 
