@@ -20,12 +20,15 @@ jobs:
       - name: Build events.json
         run: node scripts/build-events.mjs
         env:
-          EVENTBRITE_TOKEN: ${{ secrets.EVENTBRITE_TOKEN }}
-          EVENTBRITE_ORG_ID: ${{ secrets.EVENTBRITE_ORG_ID }}
-          BANDSINTOWN_APP_ID: ${{ secrets.BANDSINTOWN_APP_ID }}
-          BANDSINTOWN_ARTIST: ${{ secrets.BANDSINTOWN_ARTIST }}
-          SKIDDLE_API_KEY: ${{ secrets.SKIDDLE_API_KEY }}
-          TICKETMASTER_API_KEY: ${{ secrets.TICKETMASTER_API_KEY }}
+          EVENTBRITE_TOKEN: ${{ secrets.EVENTBRITE_TOKEN || vars.EVENTBRITE_TOKEN }}
+          EVENTBRITE_ORG_ID: ${{ secrets.EVENTBRITE_ORG_ID || vars.EVENTBRITE_ORG_ID }}
+          BANDSINTOWN_PARTNER_KEY: ${{ secrets.BANDSINTOWN_PARTNER_KEY || vars.BANDSINTOWN_PARTNER_KEY }}
+          BANDSINTOWN_ARTIST_ID: ${{ secrets.BANDSINTOWN_ARTIST_ID || vars.BANDSINTOWN_ARTIST_ID }}
+          BANDSINTOWN_APP_ID: ${{ secrets.BANDSINTOWN_APP_ID || vars.BANDSINTOWN_APP_ID }}
+          BANDSINTOWN_ARTIST: ${{ secrets.BANDSINTOWN_ARTIST || vars.BANDSINTOWN_ARTIST }}
+          SKIDDLE_API_KEY: ${{ secrets.SKIDDLE_API_KEY || vars.SKIDDLE_API_KEY }}
+          SKIDDLE_ARTIST_NAME: ${{ secrets.SKIDDLE_ARTIST_NAME || vars.SKIDDLE_ARTIST_NAME }}
+          TICKETMASTER_API_KEY: ${{ secrets.TICKETMASTER_API_KEY || vars.TICKETMASTER_API_KEY }}
 
       - name: Commit updated events.json
         run: |
