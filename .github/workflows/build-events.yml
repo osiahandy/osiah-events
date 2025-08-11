@@ -1,18 +1,19 @@
-name: Build Events JSON
+name: Build Events
 
 on:
   schedule:
-    - cron: "0 6 * * *" # run daily at 06:00 UTC
+    - cron: "0 * * * *" # daily 06:00 UTC
   workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Node.js
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
@@ -21,19 +22,18 @@ jobs:
         run: npm install node-fetch@3
 
       - name: Run build script
+        run: node scripts/build-events.mjs
         env:
           EVENTBRITE_TOKEN: ${{ secrets.EVENTBRITE_TOKEN }}
           BANDSINTOWN_APP_ID: ${{ secrets.BANDSINTOWN_APP_ID }}
           BANDSINTOWN_API_KEY: ${{ secrets.BANDSINTOWN_API_KEY }}
-          BANDSINTOWN_ARTIST_ID: ${{ secrets.BANDSINTOWN_ARTIST_ID }}
           SKIDDLE_API_KEY: ${{ secrets.SKIDDLE_API_KEY }}
           TICKETMASTER_API_KEY: ${{ secrets.TICKETMASTER_API_KEY }}
-        run: node scripts/build-events.mjs
 
-      - name: Commit and push JSON
+      - name: Commit JSON
         run: |
           git config --global user.name "GitHub Actions"
           git config --global user.email "actions@github.com"
-          git add upcoming.json past.json
-          git commit -m "Update event listings [skip ci]" || echo "No changes to commit"
+          git add web/upcoming.json web/past.json
+          git commit -m "Update events JSON" || echo "No changes to commit"
           git push
