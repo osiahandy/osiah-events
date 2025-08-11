@@ -1,0 +1,39 @@
+name: Build & Update Events
+
+on:
+  schedule:
+    - cron: "0 6 * * *"   # daily 06:00 UTC
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Build events.json
+        run: node scripts/build-events.mjs
+        env:
+          EVENTBRITE_TOKEN: ${{ secrets.EVENTBRITE_TOKEN }}
+          EVENTBRITE_ORG_ID: ${{ secrets.EVENTBRITE_ORG_ID }}
+          BANDSINTOWN_APP_ID: ${{ secrets.BANDSINTOWN_APP_ID }}
+          BANDSINTOWN_ARTIST: ${{ secrets.BANDSINTOWN_ARTIST }}
+          SKIDDLE_API_KEY: ${{ secrets.SKIDDLE_API_KEY }}
+          TICKETMASTER_API_KEY: ${{ secrets.TICKETMASTER_API_KEY }}
+
+      - name: Commit updated events.json
+        run: |
+          if [[ -n "$(git status --porcelain)" ]]; then
+            git config user.name "github-actions"
+            git config user.email "actions@users.noreply.github.com"
+            git add -A
+            git commit -m "chore: update events.json"
+            git push
+          fi
+
