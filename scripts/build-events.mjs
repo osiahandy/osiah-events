@@ -14,7 +14,7 @@ const idFrom = ({ date, city, venue }) =>
 function levenshtein(a, b) {
   const m = a.length,
     n = b.length;
-  const dp = Array.from({ length: m + 1 }, (_, i) => Array(n + 1).fill(0));
+  const dp = Array.from({ length: m + 1 }, () => Array(n + 1).fill(0));
   for (let i = 0; i <= m; i++) dp[i][0] = i;
   for (let j = 0; j <= n; j++) dp[0][j] = j;
   for (let i = 1; i <= m; i++)
@@ -76,7 +76,7 @@ function makeEvent({
   };
 }
 
-// --------- fetchers
+// --------- Eventbrite (paginated)
 async function fetchEventbrite() {
   const token = process.env.EVENTBRITE_TOKEN;
   if (!token) return [];
@@ -114,6 +114,7 @@ async function fetchEventbrite() {
   return out;
 }
 
+// --------- Bandsintown (public Artist API)
 async function fetchBandsintown() {
   const appId = process.env.BANDSINTOWN_APP_ID;
   const artist = process.env.BANDSINTOWN_ARTIST;
@@ -151,6 +152,98 @@ async function fetchBandsintown() {
   return out;
 }
 
+// --------- Skiddle (artist lookup + paginated events)
+async function findSkiddleArtistId({ name, apiKey }) {
+  const url = new URL("https://www.skiddle.com/api/v1/artists/");
+  url.searchParams.set("api_key", apiKey);
+  url.searchParams.set("name", name);
+  const res = await fetch(url);
+  if (!res.ok) {
+    console.log(`[skiddle] artists HTTP ${res.status}`);
+    return null;
+  }
+  const data = await res.json();
+  const list = data?.results || data?.data || data?.artists || [];
+  const exact = Array.isArray(list)
+    ? list.find((a) => (a.name || "").toLowerCase() === name.toLowerCase())
+    : null;
+  const artist = exact || (Array.isArray(list) ? list[0] : null);
+  const id = artist?.id || artist?.artistid || null;
+  if (!id) console.log("[skiddle] no artist id found");
+  return id;
+}
+
+async function fetchSkiddle() {
+  const apiKey = process.env.SKIDDLE_API_KEY;
+  if (!apiKey) return [];
+  const artistName =
+    process.env.SKIDDLE_ARTIST_NAME ||
+    process.env.BANDSINTOWN_ARTIST ||
+    "Osiah";
+
+  const artistId = await findSkiddleArtistId({ name: artistName, apiKey });
+  if (!artistId) {
+    console.log("[skiddle] skipped (no artist id)");
+    return [];
+  }
+
+  const limit = 100;
+  let offset = 0,
+    out = [];
+
+  while (true) {
+    const url = new URL("https://www.skiddle.com/api/v1/events/search/");
+    url.searchParams.set("api_key", apiKey);
+    url.searchParams.set("a", String(artistId)); // filter by artist ID
+    url.searchParams.set("eventcode", "LIVE"); // live gigs
+    url.searchParams.set("limit", String(limit));
+    url.searchParams.set("offset", String(offset));
+    url.searchParams.set("description", "1"); // include extra details
+
+    const res = await fetch(url);
+    if (!res.ok) {
+      console.log(`[skiddle] events HTTP ${res.status}`);
+      break;
+    }
+    const data = await res.json();
+    const events = Array.isArray(data?.results)
+      ? data.results
+      : Array.isArray(data?.data)
+      ? data.data
+      : [];
+    if (!events.length) break;
+
+    out.push(
+      ...events.map((ev) => {
+        const dt = ev?.date
+          ? `${ev.date}T${ev.openingtimes?.doorsopen || "00:00"}`
+          : ev?.openingtimes?.doorsopen;
+        return makeEvent({
+          date: dt || ev?.date,
+          time: ev?.openingtimes?.doorsopen || null,
+          city: `${ev?.venue?.town || ev?.town || ""}${
+            ev?.venue?.postcode ? ", UK" : ""
+          }`,
+          venue: ev?.venue?.name || ev?.venue?.venuename || ev?.venue || "",
+          title: ev?.eventname || ev?.name || null,
+          source: "skiddle",
+          url: ev?.link || ev?.tickets || null,
+          status: ev?.cancelled ? "cancelled" : ev?.tickets ? "on_sale" : "tba",
+        });
+      })
+    );
+
+    if (events.length < limit) break;
+    offset += limit;
+  }
+
+  console.log(
+    `[skiddle] fetched ${out.length} (artist="${artistName}" id=${artistId})`
+  );
+  return out;
+}
+
+// --------- Ticketmaster
 async function fetchTicketmaster() {
   const key = process.env.TICKETMASTER_API_KEY;
   if (!key) return [];
@@ -182,15 +275,6 @@ async function fetchTicketmaster() {
   });
   console.log(`[ticketmaster] fetched ${out.length}`);
   return out;
-}
-
-async function fetchSkiddle() {
-  const key = process.env.SKIDDLE_API_KEY;
-  if (!key) return [];
-  console.log(
-    "[skiddle] fetcher not implemented yet (placeholder returning 0)"
-  );
-  return [];
 }
 
 // --------- merge/dedupe/split
