@@ -117,60 +117,64 @@ async function fetchEventbrite() {
 // --------- Bandsintown (Partner API preferred, public fallback) + diagnostics
 async function fetchBandsintown() {
   const partnerKey = process.env.BANDSINTOWN_PARTNER_KEY;
-  const artistId = process.env.BANDSINTOWN_ARTIST_ID; // e.g., 3093010
+  const artistId = process.env.BANDSINTOWN_ARTIST_ID; // e.g. 3093010
 
+  // Try Partner API first
   if (partnerKey && artistId) {
-    const url = `https://partners.bandsintown.com/api/v1/artists/${artistId}/events`;
-    console.log(`[bandsintown] using PARTNER API for artistId=${artistId}`);
-    const res = await fetch(url, {
-      headers: { Authorization: `Bearer ${partnerKey}` },
-    });
-    console.log(`[bandsintown-partner] HTTP ${res.status}`);
-    if (!res.ok) return [];
-    let arr;
     try {
-      arr = await res.json();
-    } catch {
-      console.log("[bandsintown-partner] non-JSON body");
-      return [];
-    }
-    if (!Array.isArray(arr)) {
+      const url = `https://partners.bandsintown.com/api/v1/artists/${artistId}/events`; // <-- ensure no trailing dot
+      console.log(`[bandsintown] using PARTNER API for artistId=${artistId}`);
+      const res = await fetch(url, {
+        headers: { Authorization: `Bearer ${partnerKey}` },
+      });
+      console.log(`[bandsintown-partner] HTTP ${res.status}`);
+      if (res.ok) {
+        const arr = await res.json();
+        if (Array.isArray(arr)) {
+          const out = arr.map((e) =>
+            makeEvent({
+              date: e.datetime || e.start_time,
+              time: (e.datetime || e.start_time)?.slice(11, 16) || null,
+              city: `${e.venue?.city || ""}${
+                e.venue?.country ? ", " + e.venue.country : ""
+              }`,
+              venue: e.venue?.name || "",
+              title: e.title || e.description || null,
+              source: "bandsintown",
+              url: e.offers?.[0]?.url || e.url || null,
+              status: e.offers?.some((o) => /sold\s*out/i.test(o.status || ""))
+                ? "sold_out"
+                : "on_sale",
+            })
+          );
+          console.log(`[bandsintown-partner] fetched ${out.length}`);
+          return out;
+        } else {
+          console.log(
+            "[bandsintown-partner] non-array:",
+            JSON.stringify(arr).slice(0, 400)
+          );
+        }
+      }
+    } catch (err) {
       console.log(
-        "[bandsintown-partner] non-array:",
-        JSON.stringify(arr).slice(0, 400)
+        "[bandsintown-partner] fetch error, falling back:",
+        err?.message || err
       );
-      return [];
     }
-    const out = arr.map((e) =>
-      makeEvent({
-        date: e.datetime || e.start_time,
-        time: (e.datetime || e.start_time)?.slice(11, 16) || null,
-        city: `${e.venue?.city || ""}${
-          e.venue?.country ? ", " + e.venue.country : ""
-        }`,
-        venue: e.venue?.name || "",
-        title: e.title || e.description || null,
-        source: "bandsintown",
-        url: e.offers?.[0]?.url || e.url || null,
-        status: e.offers?.some((o) => /sold\s*out/i.test(o.status || ""))
-          ? "sold_out"
-          : "on_sale",
-      })
-    );
-    console.log(`[bandsintown-partner] fetched ${out.length}`);
-    return out;
   }
 
-  // Fallback to public Artist API if partner creds missing
-  const appId = process.env.BANDSINTOWN_APP_ID;
-  const artist = process.env.BANDSINTOWN_ARTIST;
-  console.log(
-    `[bandsintown] using PUBLIC API for artist="${artist}" app_id present=${!!appId}`
-  );
-  if (!appId || !artist) return [];
+  // Fallback: PUBLIC API using artist **ID** (id_3093010)
+  const appId = process.env.BANDSINTOWN_APP_ID || "osiah-events";
+  const idArtist = artistId
+    ? `id_${artistId}`
+    : process.env.BANDSINTOWN_ARTIST || "Osiah";
   const url = `https://rest.bandsintown.com/artists/${encodeURIComponent(
-    artist
+    idArtist
   )}/events?app_id=${encodeURIComponent(appId)}&date=all`;
+  console.log(
+    `[bandsintown-public] fetching artist="${idArtist}" app_id="${appId}"`
+  );
   const res = await fetch(url);
   console.log(`[bandsintown-public] HTTP ${res.status}`);
   if (!res.ok) return [];
