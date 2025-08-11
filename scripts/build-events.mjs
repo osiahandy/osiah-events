@@ -114,22 +114,26 @@ async function fetchEventbrite() {
   return out;
 }
 
-// --------- Bandsintown (public Artist API)
+// --------- Bandsintown (Partner API preferred, public fallback) + diagnostics
 async function fetchBandsintown() {
   const partnerKey = process.env.BANDSINTOWN_PARTNER_KEY;
   const artistId = process.env.BANDSINTOWN_ARTIST_ID; // e.g., 3093010
 
-  // Prefer Partner API (more reliable, matches your widget)
   if (partnerKey && artistId) {
     const url = `https://partners.bandsintown.com/api/v1/artists/${artistId}/events`;
+    console.log(`[bandsintown] using PARTNER API for artistId=${artistId}`);
     const res = await fetch(url, {
       headers: { Authorization: `Bearer ${partnerKey}` },
     });
-    if (!res.ok) {
-      console.log(`[bandsintown-partner] HTTP ${res.status}`);
+    console.log(`[bandsintown-partner] HTTP ${res.status}`);
+    if (!res.ok) return [];
+    let arr;
+    try {
+      arr = await res.json();
+    } catch {
+      console.log("[bandsintown-partner] non-JSON body");
       return [];
     }
-    const arr = await res.json();
     if (!Array.isArray(arr)) {
       console.log(
         "[bandsintown-partner] non-array:",
@@ -153,27 +157,35 @@ async function fetchBandsintown() {
           : "on_sale",
       })
     );
-    console.log(
-      `[bandsintown-partner] fetched ${out.length} for artist ID ${artistId}`
-    );
+    console.log(`[bandsintown-partner] fetched ${out.length}`);
     return out;
   }
 
-  // Fallback to public Artist API if partner key/ID not present
+  // Fallback to public Artist API if partner creds missing
   const appId = process.env.BANDSINTOWN_APP_ID;
   const artist = process.env.BANDSINTOWN_ARTIST;
+  console.log(
+    `[bandsintown] using PUBLIC API for artist="${artist}" app_id present=${!!appId}`
+  );
   if (!appId || !artist) return [];
   const url = `https://rest.bandsintown.com/artists/${encodeURIComponent(
     artist
   )}/events?app_id=${encodeURIComponent(appId)}&date=all`;
   const res = await fetch(url);
-  if (!res.ok) {
-    console.log(`[bandsintown-public] HTTP ${res.status}`);
+  console.log(`[bandsintown-public] HTTP ${res.status}`);
+  if (!res.ok) return [];
+  let arr;
+  try {
+    arr = await res.json();
+  } catch {
+    console.log("[bandsintown-public] non-JSON");
     return [];
   }
-  const arr = await res.json();
   if (!Array.isArray(arr)) {
-    console.log("[bandsintown-public] non-array");
+    console.log(
+      "[bandsintown-public] non-array:",
+      JSON.stringify(arr).slice(0, 400)
+    );
     return [];
   }
   const out = arr.map((e) =>
@@ -192,9 +204,7 @@ async function fetchBandsintown() {
         : "on_sale",
     })
   );
-  console.log(
-    `[bandsintown-public] fetched ${out.length} for artist="${artist}"`
-  );
+  console.log(`[bandsintown-public] fetched ${out.length}`);
   return out;
 }
 
