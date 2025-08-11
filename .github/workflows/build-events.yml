@@ -2,7 +2,7 @@ name: Build & Update Events
 
 on:
   schedule:
-    - cron: "0 6 * * *"   # daily 06:00 UTC
+    - cron: "0 6 * * *" # daily 06:00 UTC
   workflow_dispatch:
 
 jobs:
@@ -15,7 +15,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: "20"
 
       - name: Build events.json
         run: node scripts/build-events.mjs
@@ -36,4 +36,3 @@ jobs:
             git commit -m "chore: update events.json"
             git push
           fi
-
