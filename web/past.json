@@ -1,5 +1,24 @@
 [
   {
+    "id": "2025-08-25-bristol-united-kingdom-exchange",
+    "date": "2025-08-25",
+    "time": "19:30",
+    "city": "Bristol, United Kingdom",
+    "venue": "Exchange",
+    "title": null,
+    "supports": [],
+    "status": "on_sale",
+    "sources": [
+      "bandsintown"
+    ],
+    "tickets": [
+      {
+        "label": "Bandsintown",
+        "url": "https://www.bandsintown.com/e/1035540644?app_id=a05a42f5b46ceb1ad05bbeea39ce2125&came_from=267&utm_medium=api&utm_source=public_api&utm_campaign=event"
+      }
+    ]
+  },
+  {
     "id": "2025-05-03-birkenhead-united-kingdom-future-yard-cic",
     "date": "2025-05-03",
     "time": "13:00",
