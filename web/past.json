@@ -1,5 +1,24 @@
 [
   {
+    "id": "2025-08-27-manchester-united-kingdom-rebellion",
+    "date": "2025-08-27",
+    "time": "19:00",
+    "city": "Manchester, United Kingdom",
+    "venue": "Rebellion",
+    "title": "To The Grave",
+    "supports": [],
+    "status": "on_sale",
+    "sources": [
+      "bandsintown"
+    ],
+    "tickets": [
+      {
+        "label": "Bandsintown",
+        "url": "https://www.bandsintown.com/e/1035539237?app_id=a05a42f5b46ceb1ad05bbeea39ce2125&came_from=267&utm_medium=api&utm_source=public_api&utm_campaign=event"
+      }
+    ]
+  },
+  {
     "id": "2025-08-26-exeter-united-kingdom-cavern",
     "date": "2025-08-26",
     "time": "19:00",
