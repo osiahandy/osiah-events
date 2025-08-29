@@ -38,25 +38,6 @@
     ]
   },
   {
-    "id": "2025-11-15-manchester-uk-the-bread-shed",
-    "date": "2025-11-15",
-    "time": "17:00",
-    "city": "Manchester, UK",
-    "venue": "The Bread Shed",
-    "title": "Cytotoxin, Analepsy, Osiah & Cognitive | Manchester",
-    "supports": [],
-    "status": "cancelled",
-    "sources": [
-      "skiddle"
-    ],
-    "tickets": [
-      {
-        "label": "Skiddle",
-        "url": "https://www.skiddle.com/whats-on/Manchester/The-Bread-Shed/Cytotoxin-Analepsy-Osiah--Cognitive--Manchester/41061241/"
-      }
-    ]
-  },
-  {
     "id": "2025-11-20-norwich-united-kingdom-the-brickmakers",
     "date": "2025-11-20",
     "time": "19:00",
