@@ -1,24 +1,5 @@
 [
   {
-    "id": "2025-08-29-north-london-united-kingdom-the-underworld",
-    "date": "2025-08-29",
-    "time": "18:00",
-    "city": "North London, United Kingdom",
-    "venue": "The Underworld",
-    "title": "TO THE GRAVE",
-    "supports": [],
-    "status": "on_sale",
-    "sources": [
-      "bandsintown"
-    ],
-    "tickets": [
-      {
-        "label": "Bandsintown",
-        "url": "https://www.bandsintown.com/e/1035531303?app_id=a05a42f5b46ceb1ad05bbeea39ce2125&came_from=267&utm_medium=api&utm_source=public_api&utm_campaign=event"
-      }
-    ]
-  },
-  {
     "id": "2025-08-30-carlisle-united-kingdom-brickyard",
     "date": "2025-08-30",
     "time": "19:00",
