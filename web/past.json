@@ -1,5 +1,24 @@
 [
   {
+    "id": "2025-08-30-carlisle-united-kingdom-brickyard",
+    "date": "2025-08-30",
+    "time": "19:00",
+    "city": "Carlisle, United Kingdom",
+    "venue": "Brickyard",
+    "title": "On Saturday 30th August, we are bringing you one of the HEAVIEST nights we have ever put on, as we look to showcase some of the very best on the Northern Deathcore scene at The Brickyard in Carlisle!  Featuring your headliners, UK Deathcore titans OSIAH – Hailing from the extreme music melting pot that is the North East of England, Osiah transcend the deathcore label with what could possibly be the most torturous barrage of filth the UK has produced in recent years. Crushingly intense breakdowns and deathly chops tread a familiar path, but jarringly detuned guitars, unpredictable tempo changes and vocals that range from wide ranging pitched screams to commanding guttural bowel openers, add an extra evil to the sound that cannot be put into words!  Having recently killed it at Bloodstock Open Air on the Sophie Lancaster Stage last year, as well as headlining the UK Deathcore Showcase Tour, and about to embark on a European tour with Cytotoxin,the band shows no sign of slowing down their dominance as one of the UK’s heavyweights on the Deathcore circuit!  Also on this huge bill, making their Brickyard debut from the North West of England we have Dwelled, a band that is making waves across the country currently with their ferocious and unforgiving sound and high tempo live performances!  As well as the return to Carlisle of the mighty Graviter from the North East and of course, Carlisle’s very own brutal outfit, Eversio to complete the bill!  If you are a fan of heavy / extreme music, this is a night you DO NOT want to miss!",
+    "supports": [],
+    "status": "on_sale",
+    "sources": [
+      "bandsintown"
+    ],
+    "tickets": [
+      {
+        "label": "Bandsintown",
+        "url": "https://www.bandsintown.com/e/1034438106?app_id=a05a42f5b46ceb1ad05bbeea39ce2125&came_from=267&utm_medium=api&utm_source=public_api&utm_campaign=event"
+      }
+    ]
+  },
+  {
     "id": "2025-08-29-north-london-united-kingdom-the-underworld",
     "date": "2025-08-29",
     "time": "18:00",
