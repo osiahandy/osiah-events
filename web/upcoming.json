@@ -74,24 +74,5 @@
         "url": "https://www.bandsintown.com/t/1035578435?app_id=a05a42f5b46ceb1ad05bbeea39ce2125&came_from=267&utm_medium=api&utm_source=public_api&utm_campaign=ticket"
       }
     ]
-  },
-  {
-    "id": "2025-11-22-london-gb-new-cross-inn",
-    "date": "2025-11-22",
-    "time": "18:00:00",
-    "city": "London, GB",
-    "venue": "New Cross Inn",
-    "title": "Cytotoxin",
-    "supports": [],
-    "status": "on_sale",
-    "sources": [
-      "ticketmaster"
-    ],
-    "tickets": [
-      {
-        "label": "Ticketmaster",
-        "url": "https://www.universe.com/events/cytotoxin-tickets-NKZ3M2?ref=ticketmaster"
-      }
-    ]
   }
 ]
