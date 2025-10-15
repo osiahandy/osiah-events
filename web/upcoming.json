@@ -1,5 +1,24 @@
 [
   {
+    "id": "2025-11-14-nottingham-united-kingdom-the-hairy-dog",
+    "date": "2025-11-14",
+    "time": "19:00",
+    "city": "Nottingham, United Kingdom",
+    "venue": "The Hairy Dog",
+    "title": null,
+    "supports": [],
+    "status": "on_sale",
+    "sources": [
+      "bandsintown"
+    ],
+    "tickets": [
+      {
+        "label": "Bandsintown",
+        "url": "https://www.bandsintown.com/t/1036849607?app_id=a05a42f5b46ceb1ad05bbeea39ce2125&came_from=267&utm_medium=api&utm_source=public_api&utm_campaign=ticket"
+      }
+    ]
+  },
+  {
     "id": "2025-11-15-manchester-uk-the-bread-shed",
     "date": "2025-11-15",
     "time": "17:00",
