@@ -1,5 +1,24 @@
 [
   {
+    "id": "2025-11-14-nottingham-united-kingdom-the-hairy-dog",
+    "date": "2025-11-14",
+    "time": "19:00",
+    "city": "Nottingham, United Kingdom",
+    "venue": "The Hairy Dog",
+    "title": null,
+    "supports": [],
+    "status": "on_sale",
+    "sources": [
+      "bandsintown"
+    ],
+    "tickets": [
+      {
+        "label": "Bandsintown",
+        "url": "https://www.bandsintown.com/t/1036849607?app_id=a05a42f5b46ceb1ad05bbeea39ce2125&came_from=267&utm_medium=api&utm_source=public_api&utm_campaign=ticket"
+      }
+    ]
+  },
+  {
     "id": "2025-11-15-manchester-uk-the-bread-shed",
     "date": "2025-11-15",
     "time": "17:00",
@@ -15,6 +34,44 @@
       {
         "label": "Skiddle",
         "url": "https://www.skiddle.com/whats-on/Manchester/The-Bread-Shed/Cytotoxin-Analepsy-Osiah--Cognitive--Manchester/41061241/"
+      }
+    ]
+  },
+  {
+    "id": "2025-11-20-norwich-united-kingdom-the-brickmakers",
+    "date": "2025-11-20",
+    "time": "19:00",
+    "city": "Norwich, United Kingdom",
+    "venue": "The Brickmakers",
+    "title": "CYTOTOXIN",
+    "supports": [],
+    "status": "on_sale",
+    "sources": [
+      "bandsintown"
+    ],
+    "tickets": [
+      {
+        "label": "Bandsintown",
+        "url": "https://www.bandsintown.com/t/1035722979?app_id=a05a42f5b46ceb1ad05bbeea39ce2125&came_from=267&utm_medium=api&utm_source=public_api&utm_campaign=ticket"
+      }
+    ]
+  },
+  {
+    "id": "2025-11-22-london-united-kingdom-new-cross-inn",
+    "date": "2025-11-22",
+    "time": "18:00",
+    "city": "London, United Kingdom",
+    "venue": "New Cross Inn",
+    "title": "Beyond The Grave presents\nCytotoxin (DE) - Biographyte UK Tourhttps://www.cytotoxin.de/\n+ \nAnalepsy (PT)https://www.analepsy.pt/\nOsiahhttps://www.analepsy.pt/\nCognitive (US)https://linktr.ee/cognitivenj\nSaturday 22nd November 2025New Cross Inn, London\nDoors 6pm\nTickets £20 ADV STBF",
+    "supports": [],
+    "status": "on_sale",
+    "sources": [
+      "bandsintown"
+    ],
+    "tickets": [
+      {
+        "label": "Bandsintown",
+        "url": "https://www.bandsintown.com/t/1035578435?app_id=a05a42f5b46ceb1ad05bbeea39ce2125&came_from=267&utm_medium=api&utm_source=public_api&utm_campaign=ticket"
       }
     ]
   },
