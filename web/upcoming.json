@@ -19,6 +19,25 @@
     ]
   },
   {
+    "id": "2025-11-14-derby-gb-the-hairy-dog",
+    "date": "2025-11-14",
+    "time": "19:00:00",
+    "city": "Derby, GB",
+    "venue": "The Hairy Dog",
+    "title": "CYTOTOXIN",
+    "supports": [],
+    "status": "on_sale",
+    "sources": [
+      "ticketmaster"
+    ],
+    "tickets": [
+      {
+        "label": "Ticketmaster",
+        "url": "https://www.universe.com/events/cytotoxin-tickets-MTS23Y?ref=ticketmaster"
+      }
+    ]
+  },
+  {
     "id": "2025-11-15-manchester-uk-the-bread-shed",
     "date": "2025-11-15",
     "time": "17:00",
