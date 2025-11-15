@@ -1,43 +1,5 @@
 [
   {
-    "id": "2025-11-14-derby-united-kingdom-the-hairy-dog",
-    "date": "2025-11-14",
-    "time": "19:00",
-    "city": "Derby, United Kingdom",
-    "venue": "The Hairy Dog",
-    "title": " Hairy Dog presents:\nCYTOTOXIN\nChernobyl Death Metal comes to the UK as Nuclear CYTOTOXIN bring their album launch tour to Great Britain this November.\nhttps://www.cytotoxin.de/\n+ Support\nAnalepsy\nhttps://analepsy.pt/\nOsiah\nhttps://osiah.uk/​\nCognitive\nhttps://www.metalblade.com/us/artists/cognitive/\nThe Hairy Dog\nFriday 14th November 2025\nDoors 19:00\n£22 ADV\n ",
-    "supports": [],
-    "status": "on_sale",
-    "sources": [
-      "bandsintown"
-    ],
-    "tickets": [
-      {
-        "label": "Bandsintown",
-        "url": "https://www.bandsintown.com/e/1036849607?app_id=a05a42f5b46ceb1ad05bbeea39ce2125&came_from=267&utm_medium=api&utm_source=public_api&utm_campaign=event"
-      }
-    ]
-  },
-  {
-    "id": "2025-11-14-derby-gb-the-hairy-dog",
-    "date": "2025-11-14",
-    "time": "19:00:00",
-    "city": "Derby, GB",
-    "venue": "The Hairy Dog",
-    "title": "CYTOTOXIN",
-    "supports": [],
-    "status": "on_sale",
-    "sources": [
-      "ticketmaster"
-    ],
-    "tickets": [
-      {
-        "label": "Ticketmaster",
-        "url": "https://www.universe.com/events/cytotoxin-tickets-MTS23Y?ref=ticketmaster"
-      }
-    ]
-  },
-  {
     "id": "2025-11-15-manchester-uk-the-bread-shed",
     "date": "2025-11-15",
     "time": "17:00",
