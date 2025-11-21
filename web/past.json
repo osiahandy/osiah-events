@@ -1,5 +1,24 @@
 [
   {
+    "id": "2025-11-20-norwich-united-kingdom-the-brickmakers",
+    "date": "2025-11-20",
+    "time": "19:00",
+    "city": "Norwich, United Kingdom",
+    "venue": "The Brickmakers",
+    "title": "CYTOTOXIN",
+    "supports": [],
+    "status": "on_sale",
+    "sources": [
+      "bandsintown"
+    ],
+    "tickets": [
+      {
+        "label": "Bandsintown",
+        "url": "https://www.bandsintown.com/e/1035722979?app_id=a05a42f5b46ceb1ad05bbeea39ce2125&came_from=267&utm_medium=api&utm_source=public_api&utm_campaign=event"
+      }
+    ]
+  },
+  {
     "id": "2025-11-14-derby-united-kingdom-the-hairy-dog",
     "date": "2025-11-14",
     "time": "19:00",
