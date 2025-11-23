@@ -1,24 +1,5 @@
 [
   {
-    "id": "2025-11-22-london-gb-new-cross-inn",
-    "date": "2025-11-22",
-    "time": "18:00:00",
-    "city": "London, GB",
-    "venue": "New Cross Inn",
-    "title": "Cytotoxin",
-    "supports": [],
-    "status": "on_sale",
-    "sources": [
-      "ticketmaster"
-    ],
-    "tickets": [
-      {
-        "label": "Ticketmaster",
-        "url": "https://www.universe.com/events/cytotoxin-tickets-NKZ3M2?ref=ticketmaster"
-      }
-    ]
-  },
-  {
     "id": "2025-11-22-london-united-kingdom-new-cross-inn",
     "date": "2025-11-22",
     "time": "18:00",
